@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45"
+   sodipodi:docbase="/home/paskma/projects/giraffe/web"
+   sodipodi:docname="giraffe.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/paskma/projects/giraffe/web/giraffe.png"
+   inkscape:export-xdpi="24.878084"
+   inkscape:export-ydpi="24.878084"
+   sodipodi:modified="TRUE">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3449">
+      <stop
+         style="stop-color:#fffefa;stop-opacity:0.45918366;"
+         offset="0"
+         id="stop3451" />
+      <stop
+         id="stop3459"
+         offset="1"
+         style="stop-color:#fffefa;stop-opacity:0.78571427;" />
+      <stop
+         style="stop-color:#fffefa;stop-opacity:0;"
+         offset="1"
+         id="stop3453" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3183">
+      <stop
+         id="stop3185"
+         offset="0"
+         style="stop-color:#fffefa;stop-opacity:1;" />
+      <stop
+         id="stop3187"
+         offset="1"
+         style="stop-color:#fffefa;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3167">
+      <stop
+         style="stop-color:#fffefa;stop-opacity:1;"
+         offset="0"
+         id="stop3169" />
+      <stop
+         style="stop-color:#fffefa;stop-opacity:0;"
+         offset="1"
+         id="stop3171" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.24256441"
+     inkscape:cx="1647.5991"
+     inkscape:cy="554.42534"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:window-width="1222"
+     inkscape:window-height="775"
+     inkscape:window-x="58"
+     inkscape:window-y="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M -348.73829,391.07676 C -295.07762,525.22841 -300.44369,592.30423 -304.02107,601.24768 C -307.59844,610.19112 -323.69664,689.78776 -333.53443,703.20293"
+       id="path2160"
+       sodipodi:nodetypes="csc" />
+    <path
+       style="fill:#fac020;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:4.80000019;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M -432.35665,-231.76668 C -456.81561,-208.87722 -446.26938,-85.050584 -436.15103,2.220196 C -426.03268,89.490976 -491.10707,189.15196 -402.00159,234.94227 C -310.93643,281.73964 -113.00304,276.5798 -90.862312,222.29433 C -73.783972,180.42103 -173.07389,24.986476 -224.93044,-30.664454 C -276.78699,-86.315384 -280.9849,-190.0556 -307.14206,-235.56106 C -327.32181,-270.66766 -411.18341,-251.58124 -432.35665,-231.76668 z "
+       id="path3178"
+       sodipodi:nodetypes="csssssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/path3176.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M -319.22493,377.6616 C -283.45115,479.61686 -267.35295,494.8207 -252.1491,514.49628 C -240.15586,530.01694 -226.21311,549.37571 -206.53753,558.31915 C -188.24109,566.63571 -165.39769,563.68521 -149.2995,584.25513 C -133.2013,604.82505 -126.94089,674.58391 -122.46917,708.569"
+       id="path2162"
+       sodipodi:nodetypes="csssc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M -312.07016,704.09727 C -278.71924,603.92255 -273.23805,594.47862 -214.58664,609.29678 C -177.14043,618.75749 -174.95582,631.75336 -160.03163,654.01399 C -140.87415,682.58891 -145.72212,704.09728 -145.72212,704.09728"
+       id="path2164"
+       sodipodi:nodetypes="cssc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M -320.11926,372.29553 C -326.37968,360.66905 -326.31005,355.82346 -340.68919,354.40864 C -350.17808,353.47499 -341.58353,365.14076 -374.67427,382.13331 C -386.30075,393.75979 -354.10435,389.28806 -354.10435,389.28806"
+       id="path2166"
+       sodipodi:nodetypes="cscc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:12.41186428;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M -366.54988,194.20765 L -326.44861,28.281186 L -212.52453,67.787486 L -173.33464,195.19531"
+       id="path3174"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/path3176.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:12.41186428;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M -327.36,26.305886 L -388.4233,-198.88004 L -405.73977,-178.13923"
+       id="path3176"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:#fffefa;fill-opacity:0.32608696;fill-rule:evenodd;stroke:none;stroke-width:4.80000019;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M -432.26066,-229.08151 C -456.71962,-206.19205 -371.03833,-157.38873 -342.46029,-120.30923 C -300.47478,-65.833764 -255.02277,77.691856 -212.18652,141.5031 C -195.7368,166.00751 -112.90709,279.26497 -90.766392,224.9795 C -73.688092,183.1062 -172.97791,27.671646 -224.83441,-27.979284 C -276.691,-83.630214 -280.88891,-187.37043 -307.04607,-232.87589 C -327.22582,-267.98249 -411.08742,-248.89607 -432.26066,-229.08151 z "
+       id="path2172"
+       sodipodi:nodetypes="csssssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/path3176.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:#fac020;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:8.19999981;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 67.683304,134.04574 C 35.516634,163.26529 75.763514,282.4536 85.881864,369.72438 C 96.000214,456.99516 43.711664,555.49379 132.81714,601.2841 C 223.8823,648.08147 421.81569,642.92163 443.95639,588.63616 C 461.03469,546.76286 361.74479,391.32831 309.88829,335.67738 C 258.03174,280.02645 253.83383,176.28623 227.67667,130.78077 C 207.49692,95.674171 98.634564,105.93023 67.683304,134.04574 z "
+       id="path3145"
+       sodipodi:nodetypes="csssssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g4.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:21.31200027;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 168.26885,560.54948 L 208.37012,394.62302 L 322.2942,434.12932 L 361.48409,561.53714"
+       id="path3147"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g4.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:21.31200027;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 207.45873,392.64772 L 146.39543,167.46179 L 120.2254,198.32095"
+       id="path3149"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g4.png" />
+    <path
+       style="opacity:0.7258065;fill:#fffefa;fill-opacity:0.83695649;fill-rule:evenodd;stroke:none;stroke-width:4.80000019;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 124.53554,117.55454 C 97.425844,126.17439 166.08546,150.21699 193.62324,203.0296 C 231.68274,276.02104 278.53117,441.5041 321.36742,505.31534 C 337.81709,529.81975 420.64679,643.07721 442.78749,588.79174 C 459.86579,546.91844 360.57599,391.48389 308.71953,335.83296 C 256.86294,280.18203 252.40168,176.59218 226.50787,130.93635 C 209.23399,100.47915 153.36578,108.38762 124.53554,117.55454 z "
+       id="path3151"
+       sodipodi:nodetypes="csssssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g4.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:#fac020;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:9.65546703;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1137.8519,457.54582 C 1123.8349,530.44639 1080.1886,761.35906 1133.2444,802.45496 C 1182.1236,840.31571 1364.3735,812.46336 1448.7197,794.23592 C 1517.2952,779.41661 1669.7847,736.10952 1683.5408,673.01554 C 1699.0796,601.74472 1523.4153,428.60915 1490.7512,389.7425 C 1446.9208,337.58917 1315.0937,198.46222 1250.0575,214.14798 C 1184.7999,229.8871 1151.7401,385.31437 1137.8519,457.54582 z "
+       id="path2187"
+       sodipodi:nodetypes="csssssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g6.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:21.31200027;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1300.7897,721.38041 L 1340.8909,555.45395 L 1454.815,594.96025 L 1494.0049,722.36807"
+       id="path2189"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g6.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:21.31200027;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1339.9795,553.47865 L 1278.9162,328.29272 L 1252.7462,359.15188"
+       id="path2191"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g6.png" />
+    <path
+       style="fill:#fffcf3;fill-opacity:0.49456524;fill-rule:evenodd;stroke:none;stroke-width:9.65499973;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1373.4841,401.32696 C 1409.6563,445.48028 1464.2868,537.89039 1496.0086,601.54848 C 1532.9741,675.72948 1680.0612,716.52412 1687.987,672.37849 C 1700.8773,600.58139 1527.8615,427.9721 1495.1974,389.10545 C 1451.367,336.95212 1319.5073,197.69062 1254.5037,213.51093 C 1189.3611,229.36506 1337.3118,357.17364 1373.4841,401.32696 z "
+       id="path3166"
+       sodipodi:nodetypes="cssssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g6.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:9.65546703;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;opacity:0.07526882"
+       d="M 1125.0016,548.23332 C 1110.9846,621.13389 1087.1413,757.17534 1133.5122,805.68856 C 1147.4098,820.22827 1194.1063,824.44235 1243.4709,817.87543 C 1313.0167,808.62383 1217.5945,791.86131 1184.9304,752.99466 C 1141.1,700.84133 1138.8898,476.00187 1125.0016,548.23332 z "
+       id="path3168"
+       sodipodi:nodetypes="csssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g6.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#b49832;stroke-width:9.65546703;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 290.08045,-421.26677 C 276.06345,-348.3662 232.41715,-117.45353 285.47295,-76.357633 C 334.35215,-38.496883 516.60205,-66.349233 600.94825,-84.576673 C 669.52375,-99.395983 822.01325,-142.70307 835.76935,-205.79705 C 851.30815,-277.06787 675.64385,-450.20344 642.97975,-489.07009 C 599.14935,-541.22342 467.32225,-680.35037 402.28605,-664.66461 C 337.02845,-648.92549 303.96865,-493.49822 290.08045,-421.26677 z "
+       id="path4242"
+       sodipodi:nodetypes="csssssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g9.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ffc800;stroke-width:43.112;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 453.01825,-157.43218 L 493.11945,-323.35864 L 607.04355,-283.85234 L 646.23345,-156.44452"
+       id="path4244"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g9.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ffc800;stroke-width:43.112;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 492.20805,-325.33394 L 431.14475,-550.51987 L 404.97475,-519.66071"
+       id="path4246"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g9.png" />
+    <path
+       style="fill:#98917b;fill-opacity:0.49456525;fill-rule:evenodd;stroke:none;stroke-width:9.65499973;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 525.71265,-477.48563 C 561.88485,-433.33231 616.51535,-340.9222 648.23715,-277.26411 C 685.20265,-203.08311 832.28975,-162.28847 840.21555,-206.4341 C 853.10585,-278.2312 680.09005,-450.84049 647.42595,-489.70714 C 603.59555,-541.86047 471.73585,-681.12197 406.73225,-665.30166 C 341.58965,-649.44753 489.54035,-521.63895 525.71265,-477.48563 z "
+       id="path4248"
+       sodipodi:nodetypes="cssssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g9.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+    <path
+       style="opacity:0.16129032;fill:#c0c0c0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:9.65546703;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 277.23015,-330.57927 C 263.21315,-257.6787 239.36985,-121.63725 285.74075,-73.124033 C 299.63835,-58.584323 346.33485,-54.370243 395.69945,-60.937163 C 465.24525,-70.188763 369.82305,-86.951283 337.15895,-125.81793 C 293.32855,-177.97126 291.11835,-402.81072 277.23015,-330.57927 z "
+       id="path4250"
+       sodipodi:nodetypes="csssz"
+       inkscape:export-filename="/home/paskma/projects/giraffe/web/g9.png"
+       inkscape:export-xdpi="24.878084"
+       inkscape:export-ydpi="24.878084" />
+  </g>
+</svg>
