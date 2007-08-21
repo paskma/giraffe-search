@@ -11,8 +11,8 @@ class Data:
 		print "Loading index"
 		self.index, self.docs = makeindex.readindex("index.pickle")
 	
-	def get_result(self, a_query):
-		return query.get_docs(a_query, self.index, self.docs)
+	def get_result(self, a_query, dirs_only):
+		return query.get_docs(a_query, self.index, self.docs, dirs_only)
 		
 
 class Mainform:
@@ -23,7 +23,7 @@ class Mainform:
     	self.window.set_title("Giraffe: " + self.query.get_text())
     	
     	self.result.get_buffer().set_text("")
-    	docs = self.data.get_result(self.query.get_text())
+    	docs = self.data.get_result(self.query.get_text(), self.dirs_only.get_active())
     	for i in docs:
     		self.result.get_buffer().insert_at_cursor(i+"\r\n")
     
@@ -76,11 +76,15 @@ class Mainform:
         self.sw_result = gtk.ScrolledWindow()
         self.sw_result.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
         self.result = gtk.TextView()
+        
+        self.dirs_only = gtk.CheckButton("Show Directories Only")
+        self.dirs_only.set_active(True)
     
         # When the button receives the "clicked" signal, it will call the
         # function ...() passing it None as its argument.
         self.button.connect("clicked", self.search, None)
         self.query.connect("changed", self.query_changed, None)
+        self.dirs_only.connect("clicked", self.search, None)
     
         # This will cause the window to be destroyed by calling
         # gtk_widget_destroy(window) when "clicked".  Again, the destroy
@@ -93,7 +97,8 @@ class Mainform:
         #self.topbox.pack_start(self.button, expand=False)
         self.mainbox.pack_start(self.topbox, expand=False)
         self.sw_result.add(self.result)
-        self.mainbox.add(self.sw_result)
+        self.mainbox.pack_start(self.sw_result)
+        self.mainbox.pack_start(self.dirs_only, expand=False)
         self.window.add(self.mainbox)
     
         self.window.show_all()

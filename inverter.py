@@ -1,6 +1,6 @@
 import re
 
-splitter = re.compile(r"[/ \&\+,\-_\.=]")
+splitter = re.compile(r"[/ \&\+,\-_\.=\[\]\(\)]") #() []
 
 def normalize(doc):
 	words = splitter.split(doc)
@@ -17,12 +17,9 @@ def add(i, doc, dict):
 	for w in words:
 		try:
 			ids = dict[w]
-			
-			if not i in ids:
-				ids.append(i)
-			
+			ids.add(i)
 		except KeyError:
-			dict[w] = [i]
+			dict[w] = set([i])
 
 def invert(docs):
 	"inverts list of docs into index dictionary"
@@ -30,11 +27,16 @@ def invert(docs):
 	for i in range(len(docs)):
 		add(i, docs[i], index)
 	
-	#for k in index.keys():
-	#	index[k].sort()
+	for k in index.keys():
+		foo = list(index[k])
+		foo.sort()
+		index[k] = foo
 	
 	return index
 
-if __name__ == "__main__":
-	print splitter.split("ahoj/vole/blekota jekota&aa+bb,ccc-ddd__eee.fff=ggg")
+def test_splitter():
+	print splitter.split("ahoj/vole/blekota jekota&aa+bb,ccc-ddd__eee.fff=ggg[hhh](iii)jjj")
 	print splitter.split("../tmp/rmitest/Bar.Java")
+
+if __name__ == "__main__":
+	test_splitter()

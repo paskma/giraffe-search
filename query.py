@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import makeindex, inverter
+import makeindex, inverter, lister
 
 def intersection(one, two):
 	return list(set(one).intersection(set(two)))
@@ -9,7 +9,7 @@ def test_intersection():
 	b = [3,4,6,7,8]
 	print a, b, intersection(a,b)
 
-def get_docs(query, index, docs):
+def get_docs(query, index, docs, dirs_only=False):
 	#print "i,d", index, docs
 	words = inverter.normalize(query)
 	ids = []
@@ -27,8 +27,16 @@ def get_docs(query, index, docs):
 		
 	
 	result = []
+	added_dirs = {}
 	for i in ids:
-		result.append(docs[i])
+		doc = docs[i]
+		if dirs_only:
+			trimmed = doc[0:doc.rfind(lister.path_separator)]
+			if trimmed not in added_dirs:
+				added_dirs[trimmed] = 1
+				result.append(trimmed)
+		else:
+			result.append(doc)
 	
 	return result
 

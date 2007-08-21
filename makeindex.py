@@ -6,7 +6,7 @@ def makeindex(topdirs, filename):
 	docs = []
 	for i in topdirs:
 		docs += lister.fulltree(i)
-	print "Inverting..."
+	print "Inverting "+str(len(docs))+" docs..."
 	index = inverter.invert(docs)
 	output = open(filename, "wb")
 	pickle.dump(index, output)
