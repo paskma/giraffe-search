@@ -25,6 +25,7 @@ class Mainform:
     	self.result.get_buffer().set_text("")
     	docs = self.data.get_result(self.query.get_text(), self.dirs_only.get_active())
     	for i in docs:
+		print "'%s'" % i
     		self.result.get_buffer().insert_at_cursor(i+"\r\n")
     
     def query_changed(self, widget, data=None):
