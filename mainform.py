@@ -20,16 +20,26 @@ class Mainform:
     # This is a callback function. The data arguments are ignored
     # in this example. More on callbacks below.
     def search(self, widget, data=None):
-    	self.window.set_title("Giraffe: " + self.query.get_text())
+        self.window.set_title("Giraffe: " + self.query.get_text())
     	
-    	self.result.get_buffer().set_text("")
-    	docs = self.data.get_result(self.query.get_text(), self.dirs_only.get_active())
-    	for i in docs:
-		print "'%s'" % i
-    		self.result.get_buffer().insert_at_cursor(i+"\r\n")
+        self.result_store.clear()
+        docs = self.data.get_result(self.query.get_text(), self.dirs_only.get_active())
+        for i in docs:
+            print "'%s'" % i
+            self.result_store.append([i])
     
     def query_changed(self, widget, data=None):
     	self.search(widget, data)
+    
+    def result_row_activated(self, treeview, path, view_column, user_param1):
+    	model = treeview.get_model()
+        iter = model.get_iter(path)
+        filename = model.get_value(iter, 0)
+        cmd = "xdg-open '%s'" % filename
+        from commands import getstatusoutput
+        res = getstatusoutput(cmd);
+        print "ACTIVATED", cmd, res
+
 
     def delete_event(self, widget, event, data=None):
         # If you return FALSE in the "delete_event" signal handler,
@@ -76,7 +86,20 @@ class Mainform:
         
         self.sw_result = gtk.ScrolledWindow()
         self.sw_result.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
-        self.result = gtk.TextView()
+        self.result_store = gtk.ListStore(str)
+        self.result = gtk.TreeView(self.result_store)
+        
+        
+        self.result_tvcolumn = gtk.TreeViewColumn('Filename')
+        self.result.append_column(self.result_tvcolumn)
+        self.result_cell = gtk.CellRendererText()
+        self.result_tvcolumn.pack_start(self.result_cell, True)
+        self.result_tvcolumn.add_attribute(self.result_cell, 'text', 0)
+        self.result.set_search_column(0)
+        self.result_tvcolumn.set_sort_column_id(0)
+        self.result.connect("row-activated", self.result_row_activated, None)
+        
+        
         
         self.dirs_only = gtk.CheckButton("Show Directories Only")
         self.dirs_only.set_active(True)
