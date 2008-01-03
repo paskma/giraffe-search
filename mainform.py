@@ -37,7 +37,11 @@ class Mainform:
         iter = model.get_iter(path)
         filename = model.get_value(iter, 0)
         import os
-        os.spawnvp(os.P_NOWAIT,"xdg-open",["",filename])
+        if os.name == 'nt':
+            import config
+            os.startfile(unicode(filename, 'UTF-8').encode(config.WIN_ENC))
+        else: # probably posix
+            os.spawnvp(os.P_NOWAIT,"xdg-open",["",filename])
         print "ACTIVATED", filename
 
 
@@ -90,7 +94,7 @@ class Mainform:
         self.result = gtk.TreeView(self.result_store)
         
         
-        self.result_tvcolumn = gtk.TreeViewColumn('Filename')
+        self.result_tvcolumn = gtk.TreeViewColumn('Result')
         self.result.append_column(self.result_tvcolumn)
         self.result_cell = gtk.CellRendererText()
         self.result_tvcolumn.pack_start(self.result_cell, True)

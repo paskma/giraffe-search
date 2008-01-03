@@ -1,4 +1,4 @@
-import os, stat, types, sys
+import os, stat, types, sys, config
 
 path_separator = os.path.normcase('/');
 fs_encoding = sys.getfilesystemencoding()
@@ -8,7 +8,7 @@ def norm_enc(filename):
     if fs_encoding == "UTF-8":
         return filename
     else:
-        u = unicode(filename, fs_encoding)
+        u = unicode(filename, config.WIN_ENC)
         return u.encode("UTF-8")
 
 def walktree(topdir):

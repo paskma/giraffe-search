@@ -1,6 +1,6 @@
 import re
 
-splitter = re.compile(r"[/ \&\+,\-_\.=\[\]\(\)]") #() []
+splitter = re.compile(r"[/ \&\+,\-_\.=\[\]\(\)\\]") #() []
 
 def normalize(doc):
 	words = splitter.split(doc)
