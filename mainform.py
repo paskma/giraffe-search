@@ -32,13 +32,13 @@ class Mainform:
     	self.search(widget, data)
     
     def result_row_activated(self, treeview, path, view_column, user_param1):
+    	print "ACTIVATE start"
     	model = treeview.get_model()
         iter = model.get_iter(path)
         filename = model.get_value(iter, 0)
-        cmd = "xdg-open '%s'" % filename
-        from commands import getstatusoutput
-        res = getstatusoutput(cmd);
-        print "ACTIVATED", cmd, res
+        import os
+        os.spawnvp(os.P_NOWAIT,"xdg-open",["",filename])
+        print "ACTIVATED", filename
 
 
     def delete_event(self, widget, event, data=None):
