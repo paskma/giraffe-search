@@ -17,16 +17,30 @@ class Data:
 
 class Mainform:
 
+    RESULT_LIMIT = 100
+    
     # This is a callback function. The data arguments are ignored
     # in this example. More on callbacks below.
     def search(self, widget, data=None):
-        self.window.set_title("Giraffe: " + self.query.get_text())
     	
         self.result_store.clear()
         docs = self.data.get_result(self.query.get_text(), self.dirs_only.get_active())
-        for i in docs:
-            print "'%s'" % i
+
+        if self.limit_results.get_active(): 
+            show_docs = docs[:self.RESULT_LIMIT]
+        else:
+            show_docs = docs
+
+        self.limit_results.set_sensitive(len(docs) > self.RESULT_LIMIT)	
+        
+        for i in show_docs:
+            #print "'%s'" % i
             self.result_store.append([i])
+        
+        if docs: 
+        	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
+        else:
+        	self.window.set_title("Giraffe")
     
     def query_changed(self, widget, data=None):
     	self.search(widget, data)
@@ -46,15 +60,6 @@ class Mainform:
 
 
     def delete_event(self, widget, event, data=None):
-        # If you return FALSE in the "delete_event" signal handler,
-        # GTK will emit the "destroy" signal. Returning TRUE means
-        # you don't want the window to be destroyed.
-        # This is useful for popping up 'are you sure you want to quit?'
-        # type dialogs.
-        print "delete event occurred"
-
-        # Change FALSE to TRUE and the main window will not be destroyed
-        # with a "delete_event".
         return False
 
     def destroy(self, widget, data=None):
@@ -83,10 +88,14 @@ class Mainform:
         self.topbox.set_border_width(5)
         self.topbox.set_spacing(5)
         
+        self.bottom_box = gtk.HBox()
+        self.bottom_box.set_border_width(0)
+        self.bottom_box.set_spacing(5)
+        
         self.labelq = gtk.Label()
         self.labelq.set_text("Query:")
         self.query = gtk.Entry()
-        self.button = gtk.Button("Search")
+        #self.button = gtk.Button("Search")
         
         self.sw_result = gtk.ScrolledWindow()
         self.sw_result.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
@@ -103,16 +112,19 @@ class Mainform:
         self.result_tvcolumn.set_sort_column_id(0)
         self.result.connect("row-activated", self.result_row_activated, None)
         
-        
-        
+   
         self.dirs_only = gtk.CheckButton("Show Directories Only")
         self.dirs_only.set_active(True)
+        self.limit_results = gtk.CheckButton("Limit results to %s" % self.RESULT_LIMIT)
+        self.limit_results.set_sensitive(False)
+        self.limit_results.set_active(True)
     
         # When the button receives the "clicked" signal, it will call the
         # function ...() passing it None as its argument.
-        self.button.connect("clicked", self.search, None)
+        #self.button.connect("clicked", self.search, None)
         self.query.connect("changed", self.query_changed, None)
         self.dirs_only.connect("clicked", self.search, None)
+        self.limit_results.connect("clicked", self.search, None)
     
         # This will cause the window to be destroyed by calling
         # gtk_widget_destroy(window) when "clicked".  Again, the destroy
@@ -126,7 +138,9 @@ class Mainform:
         self.mainbox.pack_start(self.topbox, expand=False)
         self.sw_result.add(self.result)
         self.mainbox.pack_start(self.sw_result)
-        self.mainbox.pack_start(self.dirs_only, expand=False)
+        self.bottom_box.pack_start(self.dirs_only, expand=False)
+        self.bottom_box.pack_start(self.limit_results, expand=False)
+        self.mainbox.pack_start(self.bottom_box, expand=False)
         self.window.add(self.mainbox)
     
         self.window.show_all()
