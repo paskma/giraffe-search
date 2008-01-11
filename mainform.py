@@ -38,7 +38,7 @@ class Mainform:
             self.result_store.append([i])
         
         if docs: 
-        	self.window.set_title("Giraffe: %s (%s item(s) found)" % (self.query.get_text(), len(docs)))
+        	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
         else:
         	self.window.set_title("Giraffe")
     

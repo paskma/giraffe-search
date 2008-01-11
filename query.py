@@ -1,8 +1,24 @@
 #!/usr/bin/env python
 import makeindex, inverter, lister
 
-def intersection(one, two):
-	return list(set(one).intersection(set(two)))
+def intersection(a, b):
+	#return list(set(one).intersection(set(two)))
+	
+	#a.sort(); b.sort()
+	pointerA = 0; pointerB = 0
+	la = len(a); lb = len(b)
+	result = []
+	while pointerA < la and pointerB < lb:
+		if a[pointerA] == b[pointerB]: # If they are the same add it into a result
+			result.append(a[pointerA])
+			pointerA += 1
+			pointerB += 1
+		elif a[pointerA] < b[pointerB]:
+			pointerA += 1
+		else:
+			pointerB += 1
+			
+	return result
 
 def test_intersection():
 	a = [1,2,3,3,4,5]
