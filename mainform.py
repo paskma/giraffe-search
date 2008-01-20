@@ -35,7 +35,7 @@ class Mainform:
         
         for i in show_docs:
             #print "'%s'" % i
-            self.result_store.append([i])
+            self.result_store.append([i, 'ahoj'])
         
         if docs: 
         	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
@@ -99,15 +99,20 @@ class Mainform:
         
         self.sw_result = gtk.ScrolledWindow()
         self.sw_result.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
-        self.result_store = gtk.ListStore(str)
+        self.result_store = gtk.ListStore(str, str)
         self.result = gtk.TreeView(self.result_store)
         
         
         self.result_tvcolumn = gtk.TreeViewColumn('Result')
+        self.result_tvcolumn2 = gtk.TreeViewColumn('ICON')
         self.result.append_column(self.result_tvcolumn)
+        self.result.append_column(self.result_tvcolumn2)
         self.result_cell = gtk.CellRendererText()
+        self.result_cell2 = gtk.CellRendererText()
         self.result_tvcolumn.pack_start(self.result_cell, True)
+        self.result_tvcolumn2.pack_start(self.result_cell2, True)
         self.result_tvcolumn.add_attribute(self.result_cell, 'text', 0)
+        self.result_tvcolumn2.add_attribute(self.result_cell2, 'text', 1)
         self.result.set_search_column(0)
         self.result_tvcolumn.set_sort_column_id(0)
         self.result.connect("row-activated", self.result_row_activated, None)
