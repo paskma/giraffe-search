@@ -1,10 +1,32 @@
 import gtk.gdk
 import gnome.ui
+import lister
 
 
 ICON_THEME = gtk.icon_theme_get_default()
 ICON_HEIGHT = 24
 factory = gnome.ui.ThumbnailFactory(ICON_HEIGHT)
+
+slash = lister.path_separator
+icon_cache = {}
+def cached_icon_for_file(f, dirs_only):
+	if dirs_only or f.endswith(slash):
+		print "DIR", f
+		norm = slash
+	else:
+		dot = f.rfind(".")
+		if dot != -1:
+			norm = f[dot:]
+		else:
+			norm = f[f.rfind(slash):]
+	
+
+	if norm not in icon_cache:
+		print "MISS", norm
+		icon_cache[norm] = load_icon_for_file(f)
+	
+	return icon_cache[norm]
+
 
 def load_icon_for_file(f):
 	icon_name, flags = gnome.ui.icon_lookup(ICON_THEME, factory,

@@ -23,9 +23,9 @@ class Mainform:
     # This is a callback function. The data arguments are ignored
     # in this example. More on callbacks below.
     def search(self, widget, data=None):
-    	
+    	dirs_only = self.dirs_only.get_active()
         self.result_store.clear()
-        docs = self.data.get_result(self.query.get_text(), self.dirs_only.get_active())
+        docs = self.data.get_result(self.query.get_text(), dirs_only)
 
         if self.limit_results.get_active(): 
             show_docs = docs[:self.RESULT_LIMIT]
@@ -36,7 +36,7 @@ class Mainform:
         
         for i in show_docs:
             #print "'%s'" % i
-            self.result_store.append([i, iconutils.load_icon_for_file(i)])
+            self.result_store.append([i, iconutils.cached_icon_for_file(i, dirs_only)])
         
         if docs: 
         	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
@@ -102,9 +102,6 @@ class Mainform:
         self.sw_result.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
         self.result_store = gtk.ListStore(gobject.TYPE_STRING, gtk.gdk.Pixbuf)
         self.result = gtk.TreeView(self.result_store)
-        
-        self.testico = gtk.gdk.pixbuf_new_from_file_at_size("giraffe-ico.png", 16, 16)
-        print self.testico
         
         self.result_tvcolumn = gtk.TreeViewColumn('Result')
         self.result_tvcolumn2 = gtk.TreeViewColumn('ICON')
