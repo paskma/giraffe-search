@@ -3,6 +3,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
+import iconutils
 
 import query, makeindex, inverter
 
@@ -35,7 +36,7 @@ class Mainform:
         
         for i in show_docs:
             #print "'%s'" % i
-            self.result_store.append([i, self.testico])
+            self.result_store.append([i, iconutils.load_icon_for_file(i)])
         
         if docs: 
         	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
