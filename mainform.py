@@ -15,6 +15,11 @@ class Data:
 	def get_result(self, a_query, dirs_only):
 		return query.get_docs(a_query, self.index, self.docs, dirs_only)
 		
+def threaded(f):
+    def wrapper(*args):
+        t = threading.Thread(target=f, args=args)
+        t.start()
+    return wrapper		
 
 class Mainform:
 
@@ -22,6 +27,7 @@ class Mainform:
     
     # This is a callback function. The data arguments are ignored
     # in this example. More on callbacks below.
+    @threaded
     def search(self, widget, data=None):
     	dirs_only = self.dirs_only.get_active()
         self.result_store.clear()
@@ -104,10 +110,11 @@ class Mainform:
         self.result = gtk.TreeView(self.result_store)
         
         self.result_tvcolumn = gtk.TreeViewColumn('Result')
+        self.result_tvcolumn.set_sizing(gtk.TREE_VIEW_COLUMN_AUTOSIZE)
         self.result.append_column(self.result_tvcolumn)
         self.result_cell_ico = gtk.CellRendererPixbuf()
         self.result_cell_text = gtk.CellRendererText()
-        self.result_tvcolumn.pack_start(self.result_cell_ico, True)
+        self.result_tvcolumn.pack_start(self.result_cell_ico, False)
         self.result_tvcolumn.pack_start(self.result_cell_text, True)
         self.result_tvcolumn.add_attribute(self.result_cell_ico, 'pixbuf', 0)
         self.result_tvcolumn.add_attribute(self.result_cell_text, 'text', 1)
