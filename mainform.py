@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
+import threading
+
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
-import iconutils
 
+import iconutils
 import query, makeindex, inverter
 
 class Data:
@@ -17,8 +19,10 @@ class Data:
 		
 def threaded(f):
     def wrapper(*args):
+    	print "starting thread"
         t = threading.Thread(target=f, args=args)
         t.start()
+        print "exiting"
     return wrapper		
 
 class Mainform:
@@ -29,6 +33,10 @@ class Mainform:
     # in this example. More on callbacks below.
     @threaded
     def search(self, widget, data=None):
+    	print "acking"
+    	self.lock.acquire()
+    	print "xxx"
+    	gtk.gdk.threads_enter()
     	dirs_only = self.dirs_only.get_active()
         self.result_store.clear()
         docs = self.data.get_result(self.query.get_text(), dirs_only)
@@ -48,6 +56,8 @@ class Mainform:
         	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
         else:
         	self.window.set_title("Giraffe")
+        gtk.gdk.threads_leave()
+        self.lock.release()
     
     def query_changed(self, widget, data=None):
     	self.search(widget, data)
@@ -75,6 +85,7 @@ class Mainform:
 
     def __init__(self, data):
     	self.data = data
+    	self.lock = threading.Lock()
         # create a new window
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("delete_event", self.delete_event)
