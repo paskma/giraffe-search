@@ -36,7 +36,7 @@ class Mainform:
         
         for i in show_docs:
             #print "'%s'" % i
-            self.result_store.append([i, iconutils.cached_icon_for_file(i, dirs_only)])
+            self.result_store.append([iconutils.cached_icon_for_file(i, dirs_only), i])
         
         if docs: 
         	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
@@ -100,19 +100,17 @@ class Mainform:
         
         self.sw_result = gtk.ScrolledWindow()
         self.sw_result.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
-        self.result_store = gtk.ListStore(gobject.TYPE_STRING, gtk.gdk.Pixbuf)
+        self.result_store = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING)
         self.result = gtk.TreeView(self.result_store)
         
         self.result_tvcolumn = gtk.TreeViewColumn('Result')
-        self.result_tvcolumn2 = gtk.TreeViewColumn('ICON')
         self.result.append_column(self.result_tvcolumn)
-        self.result.append_column(self.result_tvcolumn2)
-        self.result_cell = gtk.CellRendererText()
-        self.result_cell2 = gtk.CellRendererPixbuf()
-        self.result_tvcolumn.pack_start(self.result_cell, True)
-        self.result_tvcolumn2.pack_start(self.result_cell2, True)
-        self.result_tvcolumn.add_attribute(self.result_cell, 'text', 0)
-        self.result_tvcolumn2.add_attribute(self.result_cell2, 'pixbuf', 1)
+        self.result_cell_ico = gtk.CellRendererPixbuf()
+        self.result_cell_text = gtk.CellRendererText()
+        self.result_tvcolumn.pack_start(self.result_cell_ico, True)
+        self.result_tvcolumn.pack_start(self.result_cell_text, True)
+        self.result_tvcolumn.add_attribute(self.result_cell_ico, 'pixbuf', 0)
+        self.result_tvcolumn.add_attribute(self.result_cell_text, 'text', 1)
         self.result.set_search_column(0)
         self.result_tvcolumn.set_sort_column_id(0)
         self.result.connect("row-activated", self.result_row_activated, None)

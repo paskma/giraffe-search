@@ -11,7 +11,6 @@ slash = lister.path_separator
 icon_cache = {}
 def cached_icon_for_file(f, dirs_only):
 	if dirs_only or f.endswith(slash):
-		print "DIR", f
 		norm = slash
 	else:
 		dot = f.rfind(".")
@@ -22,7 +21,6 @@ def cached_icon_for_file(f, dirs_only):
 	
 
 	if norm not in icon_cache:
-		print "MISS", norm
 		icon_cache[norm] = load_icon_for_file(f)
 	
 	return icon_cache[norm]
@@ -31,7 +29,7 @@ def cached_icon_for_file(f, dirs_only):
 def load_icon_for_file(f):
 	icon_name, flags = gnome.ui.icon_lookup(ICON_THEME, factory,
 				f, "",
-				gnome.ui.ICON_LOOKUP_FLAGS_SHOW_SMALL_IMAGES_AS_THEMSELVES)
+				gnome.ui.ICON_LOOKUP_FLAGS_NONE)
 
 	return load_icon(icon_name)
 	
