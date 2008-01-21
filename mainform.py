@@ -51,17 +51,15 @@ class Mainform:
     	self.search(widget, data)
     
     def result_row_activated(self, treeview, path, view_column, user_param1):
-    	print "ACTIVATE start"
     	model = treeview.get_model()
         iter = model.get_iter(path)
-        filename = model.get_value(iter, 0)
+        filename = model.get_value(iter, 1)
         import os
         if os.name == 'nt':
             import config
             os.startfile(unicode(filename, 'UTF-8').encode(config.WIN_ENC))
         else: # probably posix
             os.spawnvp(os.P_NOWAIT,"xdg-open",["",filename])
-        print "ACTIVATED", filename
 
 
     def delete_event(self, widget, event, data=None):
