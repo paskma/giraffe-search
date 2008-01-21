@@ -4,7 +4,11 @@ import pygtk
 pygtk.require('2.0')
 import gtk, gobject
 
-import iconutils
+try:
+    import iconutils
+except ImportError:
+    import wiconutils as iconutils
+    
 import query, makeindex, inverter
 
 class Data:
