@@ -8,9 +8,13 @@ def norm_enc(filename):
     if fs_encoding == "UTF-8":
         return filename
     else:
-        u = unicode(filename, config.WIN_ENC)
-        return u.encode("UTF-8")
-
+        try:
+            u = unicode(filename, config.WIN_ENC)
+            return u.encode("UTF-8")
+        except UnicodeDecodeError, err:
+            print "WARN: unicode error '%s'" % filename
+            return filename
+            
 def walktree(topdir):
 	try:
 		names = os.listdir(topdir)

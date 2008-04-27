@@ -2,8 +2,13 @@
 
 import pygtk
 pygtk.require('2.0')
-import gtk
+import gtk, gobject
 
+try:
+    import iconutils
+except ImportError:
+    import wiconutils as iconutils
+    
 import query, makeindex, inverter
 
 class Data:
@@ -13,18 +18,21 @@ class Data:
 	
 	def get_result(self, a_query, dirs_only):
 		return query.get_docs(a_query, self.index, self.docs, dirs_only)
-		
+	
 
 class Mainform:
 
     RESULT_LIMIT = 100
+    TARGET_TYPE_TEXT = 80
+    TARGET_TYPE_URI = 81
+    TARGETS = [('text/plain', 0, TARGET_TYPE_TEXT), ("text/uri-list", 0, TARGET_TYPE_URI)]
     
     # This is a callback function. The data arguments are ignored
     # in this example. More on callbacks below.
     def search(self, widget, data=None):
-    	
+    	dirs_only = self.dirs_only.get_active()
         self.result_store.clear()
-        docs = self.data.get_result(self.query.get_text(), self.dirs_only.get_active())
+        docs = self.data.get_result(self.query.get_text(), dirs_only)
 
         if self.limit_results.get_active(): 
             show_docs = docs[:self.RESULT_LIMIT]
@@ -35,7 +43,7 @@ class Mainform:
         
         for i in show_docs:
             #print "'%s'" % i
-            self.result_store.append([i])
+            self.result_store.append([iconutils.cached_icon_for_file(i, dirs_only), i])
         
         if docs: 
         	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
@@ -46,17 +54,15 @@ class Mainform:
     	self.search(widget, data)
     
     def result_row_activated(self, treeview, path, view_column, user_param1):
-    	print "ACTIVATE start"
     	model = treeview.get_model()
         iter = model.get_iter(path)
-        filename = model.get_value(iter, 0)
+        filename = model.get_value(iter, 1)
         import os
         if os.name == 'nt':
             import config
             os.startfile(unicode(filename, 'UTF-8').encode(config.WIN_ENC))
         else: # probably posix
             os.spawnvp(os.P_NOWAIT,"xdg-open",["",filename])
-        print "ACTIVATED", filename
 
 
     def delete_event(self, widget, event, data=None):
@@ -65,6 +71,23 @@ class Mainform:
     def destroy(self, widget, data=None):
         print "destroy signal occurred"
         gtk.main_quit()
+    
+    def drag_data_get(self, treeview, context, selection, target_type, etime):
+    	#print "DDG", selection
+    	
+    	treeselection = treeview.get_selection()
+        model, iter = treeselection.get_selected()
+        data = model.get_value(iter, 1)
+        print data
+    	
+    	if target_type == self.TARGET_TYPE_TEXT:
+    		#print "TEXT"
+    		selection.set(selection.target, 8, data)
+    	elif target_type == self.TARGET_TYPE_URI:
+    		#print "URI"
+    		selection.set(selection.target, 8, data)
+    	else:
+    		print "UNKNOWN DnD TARGET TYPE"
 
     def __init__(self, data):
     	self.data = data
@@ -99,18 +122,25 @@ class Mainform:
         
         self.sw_result = gtk.ScrolledWindow()
         self.sw_result.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
-        self.result_store = gtk.ListStore(str)
+        self.result_store = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING)
         self.result = gtk.TreeView(self.result_store)
         
-        
         self.result_tvcolumn = gtk.TreeViewColumn('Result')
+        self.result_tvcolumn.set_sizing(gtk.TREE_VIEW_COLUMN_AUTOSIZE)
         self.result.append_column(self.result_tvcolumn)
-        self.result_cell = gtk.CellRendererText()
-        self.result_tvcolumn.pack_start(self.result_cell, True)
-        self.result_tvcolumn.add_attribute(self.result_cell, 'text', 0)
+        self.result_cell_ico = gtk.CellRendererPixbuf()
+        self.result_cell_text = gtk.CellRendererText()
+        self.result_tvcolumn.pack_start(self.result_cell_ico, False)
+        self.result_tvcolumn.pack_start(self.result_cell_text, True)
+        self.result_tvcolumn.add_attribute(self.result_cell_ico, 'pixbuf', 0)
+        self.result_tvcolumn.add_attribute(self.result_cell_text, 'text', 1)
         self.result.set_search_column(0)
         self.result_tvcolumn.set_sort_column_id(0)
         self.result.connect("row-activated", self.result_row_activated, None)
+        # drag'n'drop support
+        self.result.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, 
+        	self.TARGETS ,gtk.gdk.ACTION_DEFAULT | gtk.gdk.ACTION_COPY)
+        self.result.connect("drag_data_get", self.drag_data_get)
         
    
         self.dirs_only = gtk.CheckButton("Show Directories Only")
