@@ -23,6 +23,9 @@ class Data:
 class Mainform:
 
     RESULT_LIMIT = 100
+    TARGET_TYPE_TEXT = 80
+    TARGET_TYPE_URI = 81
+    TARGETS = [('text/plain', 0, TARGET_TYPE_TEXT), ("text/uri-list", 0, TARGET_TYPE_URI)]
     
     # This is a callback function. The data arguments are ignored
     # in this example. More on callbacks below.
@@ -68,6 +71,23 @@ class Mainform:
     def destroy(self, widget, data=None):
         print "destroy signal occurred"
         gtk.main_quit()
+    
+    def drag_data_get(self, treeview, context, selection, target_type, etime):
+    	#print "DDG", selection
+    	
+    	treeselection = treeview.get_selection()
+        model, iter = treeselection.get_selected()
+        data = model.get_value(iter, 1)
+        print data
+    	
+    	if target_type == self.TARGET_TYPE_TEXT:
+    		#print "TEXT"
+    		selection.set(selection.target, 8, data)
+    	elif target_type == self.TARGET_TYPE_URI:
+    		#print "URI"
+    		selection.set(selection.target, 8, data)
+    	else:
+    		print "UNKNOWN DnD TARGET TYPE"
 
     def __init__(self, data):
     	self.data = data
@@ -117,6 +137,10 @@ class Mainform:
         self.result.set_search_column(0)
         self.result_tvcolumn.set_sort_column_id(0)
         self.result.connect("row-activated", self.result_row_activated, None)
+        # drag'n'drop support
+        self.result.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, 
+        	self.TARGETS ,gtk.gdk.ACTION_DEFAULT | gtk.gdk.ACTION_COPY)
+        self.result.connect("drag_data_get", self.drag_data_get)
         
    
         self.dirs_only = gtk.CheckButton("Show Directories Only")
