@@ -4,6 +4,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk, gobject
 import logging as log
+import threading as th
 
 try:
     import iconutils
@@ -15,19 +16,49 @@ from watches import StopWatch as W
 
 log.basicConfig(level=log.DEBUG,
                 format='%(asctime)s %(levelname)-8s %(message)s')
+gtk.gdk.threads_init()
 
-class Data:
+class Data(th.Thread):
 	def __init__(self, filename):
+		th.Thread.__init__(self)
+		self.load_index()
+		self.cond = th.Condition()
+		self.queue = []
+		self.setDaemon(True)
+		self.start()
+		log.debug("Daemon started")
+
+	def load_index(self):
 		log.info("Loading index.")
 		w = W()
 		self.index, self.docs = makeindex.readindex("index.pickle")
 		log.info("Index loaded %s" % w)
+		
+	def run(self, *args, **kwargs):
+		#self.load_index()
+		while True:
+			self.cond.acquire()
+			self.cond.wait()
+			while self.queue:
+				query = self.queue.pop(0)
+				result = self.get_result(*query)
+				self.view_result_cb(result)
+			self.cond.release()
 	
 	def get_result(self, a_query, dirs_only):
 		w = W()
 		result = query.get_docs(a_query, self.index, self.docs, dirs_only)
 		log.debug("Query: '%s', %s docs, %s" % (a_query, len(result), w))
 		return result
+	
+	def set_result_cb(self, cb):
+		self.view_result_cb = cb
+	
+	def do_query(self, a_query, dirs_only):
+		self.cond.acquire()
+		self.queue.append((a_query, dirs_only))
+		self.cond.notify()
+		self.cond.release()
 	
 
 class Mainform:
@@ -37,13 +68,21 @@ class Mainform:
     TARGET_TYPE_URI = 81
     TARGETS = [('text/plain', 0, TARGET_TYPE_TEXT), ("text/uri-list", 0, TARGET_TYPE_URI)]
     
-    # This is a callback function. The data arguments are ignored
-    # in this example. More on callbacks below.
+
     def search(self, widget, data=None):
+        #w = W()
+        dirs_only = self.dirs_only.get_active()
+        self.data.do_query(self.query.get_text(), dirs_only)
+        #log.debug("Lag %s " % w)
+    
+    def view_result(self, docs):
+        """
+           Called from Data class 
+        """
         w = W()
-    	dirs_only = self.dirs_only.get_active()
+        gtk.gdk.threads_enter()
+        dirs_only = self.dirs_only.get_active()
         self.result_store.clear()
-        docs = self.data.get_result(self.query.get_text(), dirs_only)
 
         if self.limit_results.get_active(): 
             show_docs = docs[:self.RESULT_LIMIT]
@@ -60,7 +99,8 @@ class Mainform:
         	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
         else:
         	self.window.set_title("Giraffe")
-        log.debug("Lag %s " % w)
+        gtk.gdk.threads_leave()
+        log.debug("View %s " % w)
     
     def query_changed(self, widget, data=None):
     	self.search(widget, data)
@@ -115,7 +155,7 @@ class Mainform:
         # Sets the border width of the window.
         self.window.set_border_width(5)
         self.window.set_title("Giraffe")
-        self.window.set_default_size(700, 300)
+        self.window.set_default_size(820, 300)
         
         self.mainbox = gtk.VBox()
         
@@ -189,13 +229,17 @@ class Mainform:
         
 
     def main(self):
+        gtk.gdk.threads_enter()
         gtk.main()
+        gtk.gdk.threads_leave()
+
 
 
 if __name__ == "__main__":
     log.debug("App start.")
     data = Data("index.pickle")
     form = Mainform(data)
+    data.set_result_cb(form.view_result)
     form.main()
     log.debug("App end.")
 
