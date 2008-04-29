@@ -26,7 +26,7 @@ class Data(th.Thread):
 		self.queue = []
 		self.setDaemon(True)
 		self.start()
-		log.debug("Daemon started")
+
 
 	def load_index(self):
 		log.info("Loading index.")
@@ -35,6 +35,7 @@ class Data(th.Thread):
 		log.info("Index loaded %s" % w)
 		
 	def run(self, *args, **kwargs):
+		log.debug("Daemon started")
 		#self.load_index()
 		while True:
 			self.cond.acquire()
@@ -121,7 +122,6 @@ class Mainform:
         return False
 
     def destroy(self, widget, data=None):
-        print "destroy signal occurred"
         gtk.main_quit()
     
     def drag_data_get(self, treeview, context, selection, target_type, etime):
