@@ -3,6 +3,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
+import logging as log
 
 try:
     import iconutils
@@ -10,14 +11,23 @@ except ImportError:
     import wiconutils as iconutils
     
 import query, makeindex, inverter
+from watches import StopWatch as W
+
+log.basicConfig(level=log.DEBUG,
+                format='%(asctime)s %(levelname)-8s %(message)s')
 
 class Data:
 	def __init__(self, filename):
-		print "Loading index"
+		log.info("Loading index.")
+		w = W()
 		self.index, self.docs = makeindex.readindex("index.pickle")
+		log.info("Index loaded %s" % w)
 	
 	def get_result(self, a_query, dirs_only):
-		return query.get_docs(a_query, self.index, self.docs, dirs_only)
+		w = W()
+		result = query.get_docs(a_query, self.index, self.docs, dirs_only)
+		log.debug("Query: '%s', %s docs, %s" % (a_query, len(result), w))
+		return result
 	
 
 class Mainform:
@@ -30,6 +40,7 @@ class Mainform:
     # This is a callback function. The data arguments are ignored
     # in this example. More on callbacks below.
     def search(self, widget, data=None):
+        w = W()
     	dirs_only = self.dirs_only.get_active()
         self.result_store.clear()
         docs = self.data.get_result(self.query.get_text(), dirs_only)
@@ -49,6 +60,7 @@ class Mainform:
         	self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
         else:
         	self.window.set_title("Giraffe")
+        log.debug("Lag %s " % w)
     
     def query_changed(self, widget, data=None):
     	self.search(widget, data)
@@ -181,7 +193,9 @@ class Mainform:
 
 
 if __name__ == "__main__":
+    log.debug("App start.")
     data = Data("index.pickle")
     form = Mainform(data)
     form.main()
+    log.debug("App end.")
 
