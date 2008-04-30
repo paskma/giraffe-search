@@ -13,5 +13,5 @@ class StopWatch:
 		except AttributeError:
 			end = now()
 
-		return  "%.2fs" % (end - self.start)
+		return  "%.3fs" % (end - self.start)
 

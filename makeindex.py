@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import cPickle as pickle, inverter, lister
+import logging
 
 def makeindex(topdirs, filename):
 	docs = []
@@ -17,7 +18,7 @@ def readindex(filename):
 	data = open(filename, "rb")
 	index = pickle.load(data)
 	docs = pickle.load(data)
-	print "Docs:", len(docs), "words:", len(index)
+	logging.info("Docs: %s, words: %s" % (len(docs),len(index)))
 	return index, docs
 
 if __name__ == "__main__":

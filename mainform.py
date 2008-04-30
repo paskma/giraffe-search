@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
@@ -14,6 +15,9 @@ except ImportError:
 import query, makeindex, inverter
 from watches import StopWatch as W
 
+MT = True #Multithreading
+if os.name == 'nt':
+	MT = False #PyGTK on win32 does not support threads
 
 class Data(th.Thread):
 	def __init__(self, filename):
@@ -22,7 +26,7 @@ class Data(th.Thread):
 		self.cond = th.Condition()
 		self.queue = []
 		self.setDaemon(True)
-		self.start()
+		if MT: self.start()
 
 
 	def load_index(self):
@@ -32,6 +36,7 @@ class Data(th.Thread):
 		log.info("Index loaded %s" % w)
 		
 	def run(self, *args, **kwargs):
+		assert MT
 		log.debug("Daemon started")
 		#self.load_index()
 		while True:
@@ -45,6 +50,7 @@ class Data(th.Thread):
 			result = self.get_result(*query)
 			self.view_result_cb(result)
 	
+	
 	def get_result(self, a_query, dirs_only):
 		w = W()
 		result = query.get_docs(a_query, self.index, self.docs, dirs_only)
@@ -55,10 +61,13 @@ class Data(th.Thread):
 		self.view_result_cb = cb
 	
 	def do_query(self, a_query, dirs_only):
-		self.cond.acquire()
-		self.queue.append((a_query, dirs_only))
-		self.cond.notify()
-		self.cond.release()
+		if MT:
+			self.cond.acquire()
+			self.queue.append((a_query, dirs_only))
+			self.cond.notify()
+			self.cond.release()
+		else:
+			self.view_result_cb(self.get_result(a_query, dirs_only))
 	
 
 class Mainform:
@@ -70,18 +79,18 @@ class Mainform:
 	
 
 	def search(self, widget, data=None):
-		#w = W()
+		w = W()
 		dirs_only = self.dirs_only.get_active()
 		query = self.query.get_text()
 		self.data.do_query(query, dirs_only)
-		#log.debug("Lag '%s' %s " % (query, w))
+		log.debug("Lag '%s' %s " % (query, w))
 	
 	def view_result(self, docs):
 		"""
 		   Called from Data class 
 		"""
 		w = W()
-		gtk.gdk.threads_enter()
+		if MT: gtk.gdk.threads_enter()
 		dirs_only = self.dirs_only.get_active()
 		self.result_store.clear()
 
@@ -100,7 +109,7 @@ class Mainform:
 			self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
 		else:
 			self.window.set_title("Giraffe")
-		gtk.gdk.threads_leave()
+		if MT: gtk.gdk.threads_leave()
 		log.debug("View %s " % w)
 	
 	def query_changed(self, widget, data=None):
@@ -110,7 +119,6 @@ class Mainform:
 		model = treeview.get_model()
 		iter = model.get_iter(path)
 		filename = model.get_value(iter, 1)
-		import os
 		if os.name == 'nt':
 			import config
 			os.startfile(unicode(filename, 'UTF-8').encode(config.WIN_ENC))
@@ -238,11 +246,11 @@ class Mainform:
 if __name__ == "__main__":
 	log.basicConfig(level=log.DEBUG,
 			format='%(asctime)s %(levelname)-8s %(message)s')
-	log.debug("App start.")
+	log.debug("App start." + ("" if MT else " MT disabled"))
 	data = Data("index.pickle")
 	gtk.gdk.threads_init()
 	form = Mainform(data)
 	data.set_result_cb(form.view_result)
 	form.main()
-	log.debug("App end.")
+	log.debug("Done.")
 
