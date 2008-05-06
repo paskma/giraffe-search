@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-import cPickle as pickle, inverter, lister
+import cPickle as pickle
 import logging
+
+import  inverter, lister
 
 def makeindex(topdirs, filename):
 	docs = []
@@ -10,8 +12,8 @@ def makeindex(topdirs, filename):
 	print "Inverting "+str(len(docs))+" docs..."
 	index = inverter.invert(docs)
 	output = open(filename, "wb")
-	pickle.dump(index, output)
-	pickle.dump(docs, output)
+	pickle.dump(index, output, pickle.HIGHEST_PROTOCOL)
+	pickle.dump(docs, output, pickle.HIGHEST_PROTOCOL)
 	output.close()
 
 def readindex(filename):

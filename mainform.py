@@ -11,18 +11,32 @@ try:
 	import iconutils
 except ImportError:
 	import wiconutils as iconutils
+
+PSYCO = True
+if PSYCO:
+	try:
+		import psyco
+		psyco.full()
+	except ImportError:
+		log.error("Psyco not available")
 	
 import query, makeindex, inverter
 from watches import StopWatch as W
 
 MT = True #Multithreading
+MT_INDEX = True #Loading index in worker thread (slow)
+
 if os.name == 'nt':
 	MT = False #PyGTK on win32 does not support threads
+
+if not MT:
+	MT_INDEX = False
+
 
 class Data(th.Thread):
 	def __init__(self, filename):
 		th.Thread.__init__(self)
-		self.load_index()
+		if not MT_INDEX: self.load_index()
 		self.cond = th.Condition()
 		self.queue = []
 		self.setDaemon(True)
@@ -34,11 +48,13 @@ class Data(th.Thread):
 		w = W()
 		self.index, self.docs = makeindex.readindex("index.pickle")
 		log.info("Index loaded %s" % w)
+		if MT_INDEX: self.update_logo_cb()
+		##self.rr = self.get_result("prodigy", False)##
 		
 	def run(self, *args, **kwargs):
 		assert MT
 		log.debug("Daemon started")
-		#self.load_index()
+		if MT_INDEX: self.load_index()
 		while True:
 			self.cond.acquire()		
 			if not self.queue:
@@ -49,6 +65,7 @@ class Data(th.Thread):
 			
 			result = self.get_result(*query)
 			self.view_result_cb(result)
+			##self.view_result_cb(self.rr)
 	
 	
 	def get_result(self, a_query, dirs_only):
@@ -60,6 +77,9 @@ class Data(th.Thread):
 	def set_result_cb(self, cb):
 		self.view_result_cb = cb
 	
+	def set_update_logo_cb(self, logo_cb):
+		self.update_logo_cb = logo_cb
+	
 	def do_query(self, a_query, dirs_only):
 		if MT:
 			self.cond.acquire()
@@ -68,11 +88,15 @@ class Data(th.Thread):
 			self.cond.release()
 		else:
 			self.view_result_cb(self.get_result(a_query, dirs_only))
-	
+			##self.view_result_cb(self.rr)
 
 class Mainform:
+	"""
+		THE MAIN AND ONLY FORM!
+	"""
 
 	RESULT_LIMIT = 100
+	# Drag'n'Drop
 	TARGET_TYPE_TEXT = 80
 	TARGET_TYPE_URI = 81
 	TARGETS = [('text/plain', 0, TARGET_TYPE_TEXT), ("text/uri-list", 0, TARGET_TYPE_URI)]
@@ -112,6 +136,14 @@ class Mainform:
 		if MT: gtk.gdk.threads_leave()
 		log.debug("View %s " % w)
 	
+	def update_logo(self):
+		"""
+			Called from Data class"
+		"""
+		if MT: gtk.gdk.threads_enter()
+		self.logo.set_from_file("giraffe-logo.png")
+		if MT: gtk.gdk.threads_leave()
+			
 	def query_changed(self, widget, data=None):
 		self.search(widget, data)
 	
@@ -133,21 +165,18 @@ class Mainform:
 		gtk.main_quit()
 	
 	def drag_data_get(self, treeview, context, selection, target_type, etime):
-		#print "DDG", selection
-		
 		treeselection = treeview.get_selection()
 		model, iter = treeselection.get_selected()
 		data = model.get_value(iter, 1)
-		print data
 		
 		if target_type == self.TARGET_TYPE_TEXT:
-			#print "TEXT"
+			log.debug("DnD: TEXT")
 			selection.set(selection.target, 8, data)
 		elif target_type == self.TARGET_TYPE_URI:
-			#print "URI"
+			log.debug("DnD: URI")
 			selection.set(selection.target, 8, data)
 		else:
-			print "UNKNOWN DnD TARGET TYPE"
+			log.error("UNKNOWN DnD TARGET TYPE")
 
 	def __init__(self, data):
 		self.data = data
@@ -156,7 +185,7 @@ class Mainform:
 		self.window.connect("delete_event", self.delete_event)
 		self.window.connect("destroy", self.destroy)
 		try:
-			self.window.set_icon_from_file("giraffe-ico.png")
+			self.window.set_icon_from_file("giraffe-logo.png")
 		except Exception, ex:
 			print ex
 	
@@ -168,8 +197,8 @@ class Mainform:
 		self.mainbox = gtk.VBox()
 		
 		self.topbox = gtk.HBox()
-		self.topbox.set_border_width(5)
-		self.topbox.set_spacing(5)
+		self.topbox.set_border_width(8)
+		self.topbox.set_spacing(8)
 		
 		self.bottom_box = gtk.HBox()
 		self.bottom_box.set_border_width(0)
@@ -179,12 +208,16 @@ class Mainform:
 		self.labelq.set_text("Query:")
 		self.query = gtk.Entry()
 		#self.button = gtk.Button("Search")
+		self.logo = gtk.Image()
+		if MT_INDEX: self.logo.set_from_file("giraffe-logo2.png")
+		else: self.update_logo()
 		
+		# Results
 		self.sw_result = gtk.ScrolledWindow()
 		self.sw_result.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
 		self.result_store = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING)
 		self.result = gtk.TreeView(self.result_store)
-		
+		# Results - tree view
 		self.result_tvcolumn = gtk.TreeViewColumn('Result')
 		self.result_tvcolumn.set_sizing(gtk.TREE_VIEW_COLUMN_AUTOSIZE)
 		self.result.append_column(self.result_tvcolumn)
@@ -202,29 +235,22 @@ class Mainform:
 			self.TARGETS ,gtk.gdk.ACTION_DEFAULT | gtk.gdk.ACTION_COPY)
 		self.result.connect("drag_data_get", self.drag_data_get)
 		
-   
+		# status bar
 		self.dirs_only = gtk.CheckButton("Show Directories Only")
 		self.dirs_only.set_active(True)
 		self.limit_results = gtk.CheckButton("Limit results to %s" % self.RESULT_LIMIT)
 		self.limit_results.set_sensitive(False)
 		self.limit_results.set_active(True)
 	
-		# When the button receives the "clicked" signal, it will call the
-		# function ...() passing it None as its argument.
-		#self.button.connect("clicked", self.search, None)
+		# signals
 		self.query.connect("changed", self.query_changed, None)
 		self.dirs_only.connect("clicked", self.search, None)
 		self.limit_results.connect("clicked", self.search, None)
 	
-		# This will cause the window to be destroyed by calling
-		# gtk_widget_destroy(window) when "clicked".  Again, the destroy
-		# signal could come from here, or the window manager.
-		#self.button.connect_object("clicked", gtk.Widget.destroy, self.window)
-	
-		# This packs the button into the window (a GTK container).
+		# Main form assembly
 		self.topbox.pack_start(self.labelq, expand=False)
 		self.topbox.pack_start(self.query)
-		#self.topbox.pack_start(self.button, expand=False)
+		self.topbox.pack_start(self.logo, expand=False)
 		self.mainbox.pack_start(self.topbox, expand=False)
 		self.sw_result.add(self.result)
 		self.mainbox.pack_start(self.sw_result)
@@ -244,13 +270,15 @@ class Mainform:
 
 
 if __name__ == "__main__":
-	log.basicConfig(level=log.DEBUG,
+	dlevel = log.INFO
+	log.basicConfig(level=dlevel,
 			format='%(asctime)s %(levelname)-8s %(message)s')
 	log.debug("App start." + ("" if MT else " MT disabled"))
 	data = Data("index.pickle")
 	gtk.gdk.threads_init()
 	form = Mainform(data)
 	data.set_result_cb(form.view_result)
+	data.set_update_logo_cb(form.update_logo)
 	form.main()
-	log.debug("Done.")
+	log.info("Done.")
 
