@@ -4,16 +4,49 @@ import makeindex, inverter, lister
 def intersection(a, b):
 	return list(set(a).intersection(set(b)))
 
+def difference(a,b):
+	return list(set(a).difference(set(b)))
+
+def union(a,b):
+	return list(set(a).union(set(b)))
+
 def test_intersection():
 	a = [1,2,3,3,4,5]
 	b = [3,4,6,7,8]
 	print a, b, intersection(a,b)
 
+def parse_query(query):
+	terms = query.split()
+	yes_terms = []
+	no_terms = []
+	wild_terms = []
+	for i in terms:
+		normalized_term = inverter.normalize(i) #returns a list
+		if i.startswith("-"):
+			no_terms += normalized_term
+		elif i.endswith("*"):
+			wild_terms += normalized_term
+		else:
+			yes_terms += normalized_term
+	
+	return yes_terms, no_terms, wild_terms
+	
+
 def get_docs(query, index, docs, dirs_only=False):
-	#print "i,d", index, docs
-	words = inverter.normalize(query)
+	words, not_words, wild_words = parse_query(query)
 	ids = []
-	firstrun = True
+	
+	#wild words
+	for i in index:
+		for w in wild_words:
+			if i.startswith(w):
+				ids = union(ids, index[i])
+	
+	
+	# normal words
+	if not ids: firstrun = True
+	else: firstrun = False
+	
 	try:
 		for w in words:
 			if firstrun:
@@ -24,6 +57,13 @@ def get_docs(query, index, docs, dirs_only=False):
 				ids = intersection(ids, next)
 	except KeyError:
 		ids = []
+	
+	#not words
+	for w in not_words:
+		try:
+			ids = difference(ids, index[w])
+		except KeyError:
+			pass
 		
 	
 	result = []
@@ -38,6 +78,7 @@ def get_docs(query, index, docs, dirs_only=False):
 		else:
 			result.append(doc)
 	
+	result.sort()
 	return result
 
 

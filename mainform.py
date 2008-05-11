@@ -6,13 +6,14 @@ pygtk.require('2.0')
 import gtk, gobject
 import logging as log
 import threading as th
+import time
 
 try:
 	import iconutils
 except ImportError:
 	import wiconutils as iconutils
 
-PSYCO = True
+PSYCO = False
 if PSYCO:
 	try:
 		import psyco
@@ -20,11 +21,11 @@ if PSYCO:
 	except ImportError:
 		log.error("Psyco not available")
 	
-import query, makeindex, inverter
+import query, makeindex
 from watches import StopWatch as W
 
 MT = True #Multithreading
-MT_INDEX = True #Loading index in worker thread (slow)
+MT_INDEX = False #Loading index in worker thread (slow)
 
 if os.name == 'nt':
 	MT = False #PyGTK on win32 does not support threads
@@ -48,8 +49,7 @@ class Data(th.Thread):
 		w = W()
 		self.index, self.docs = makeindex.readindex("index.pickle")
 		log.info("Index loaded %s" % w)
-		if MT_INDEX: self.update_logo_cb()
-		##self.rr = self.get_result("prodigy", False)##
+		if MT_INDEX: self.update_logo_cb(busy=False, lock=True)
 		
 	def run(self, *args, **kwargs):
 		assert MT
@@ -64,8 +64,11 @@ class Data(th.Thread):
 			self.cond.release()
 			
 			result = self.get_result(*query)
+			
+			time.sleep(0.05)
+			if self.queue: continue
+			
 			self.view_result_cb(result)
-			##self.view_result_cb(self.rr)
 	
 	
 	def get_result(self, a_query, dirs_only):
@@ -88,7 +91,6 @@ class Data(th.Thread):
 			self.cond.release()
 		else:
 			self.view_result_cb(self.get_result(a_query, dirs_only))
-			##self.view_result_cb(self.rr)
 
 class Mainform:
 	"""
@@ -104,6 +106,7 @@ class Mainform:
 
 	def search(self, widget, data=None):
 		w = W()
+		self.update_logo(busy=True,lock=False)
 		dirs_only = self.dirs_only.get_active()
 		query = self.query.get_text()
 		self.data.do_query(query, dirs_only)
@@ -133,16 +136,22 @@ class Mainform:
 			self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
 		else:
 			self.window.set_title("Giraffe")
+		self.update_logo(busy=False, lock=False)
 		if MT: gtk.gdk.threads_leave()
 		log.debug("View %s " % w)
 	
-	def update_logo(self):
+	def update_logo(self, busy, lock):
 		"""
 			Called from Data class"
+				busy - boolean, which logo
+				lock - boolean, whether to lock
 		"""
-		if MT: gtk.gdk.threads_enter()
-		self.logo.set_from_file("giraffe-logo.png")
-		if MT: gtk.gdk.threads_leave()
+		if MT and lock: gtk.gdk.threads_enter()
+		if busy:
+			self.logo.set_from_pixbuf(self.picture_busy.get_pixbuf())
+		else:
+			self.logo.set_from_pixbuf(self.picture_ready.get_pixbuf())
+		if MT and lock: gtk.gdk.threads_leave()
 			
 	def query_changed(self, widget, data=None):
 		self.search(widget, data)
@@ -178,12 +187,19 @@ class Mainform:
 		else:
 			log.error("UNKNOWN DnD TARGET TYPE")
 
-	def __init__(self, data):
-		self.data = data
+	def __init__(self):
+		self.data = None # will be set
 		# create a new window
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 		self.window.connect("delete_event", self.delete_event)
 		self.window.connect("destroy", self.destroy)
+		
+		#load images
+		self.picture_ready = gtk.Image()
+		self.picture_ready.set_from_file("giraffe-logo.png")
+		self.picture_busy = gtk.Image()
+		self.picture_busy.set_from_file("giraffe-logo-dark.png")
+		
 		try:
 			self.window.set_icon_from_file("giraffe-logo.png")
 		except Exception, ex:
@@ -205,12 +221,14 @@ class Mainform:
 		self.bottom_box.set_spacing(5)
 		
 		self.labelq = gtk.Label()
-		self.labelq.set_text("Query:")
+		self.labelq.set_text("Search:")
 		self.query = gtk.Entry()
 		#self.button = gtk.Button("Search")
+
+		
 		self.logo = gtk.Image()
-		if MT_INDEX: self.logo.set_from_file("giraffe-logo2.png")
-		else: self.update_logo()
+		if MT_INDEX: self.update_logo(busy=True, lock=False)
+		else: self.update_logo(busy=False, lock=False)
 		
 		# Results
 		self.sw_result = gtk.ScrolledWindow()
@@ -271,14 +289,16 @@ class Mainform:
 
 if __name__ == "__main__":
 	dlevel = log.INFO
+	dlevel = log.DEBUG
 	log.basicConfig(level=dlevel,
 			format='%(asctime)s %(levelname)-8s %(message)s')
 	log.debug("App start." + ("" if MT else " MT disabled"))
-	data = Data("index.pickle")
 	gtk.gdk.threads_init()
-	form = Mainform(data)
+	form = Mainform()
+	data = Data("index.pickle")
 	data.set_result_cb(form.view_result)
 	data.set_update_logo_cb(form.update_logo)
+	form.data = data
 	form.main()
 	log.info("Done.")
 
