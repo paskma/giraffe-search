@@ -21,7 +21,11 @@ def readindex(filename):
 	index = pickle.load(data)
 	docs = pickle.load(data)
 	logging.info("Docs: %s, words: %s" % (len(docs),len(index)))
-	return index, docs
+	
+	sorted_words = [w for w in index]
+	sorted_words.sort()
+	
+	return index, docs, sorted_words
 
 if __name__ == "__main__":
 	from sys import argv

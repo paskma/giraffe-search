@@ -47,7 +47,7 @@ class Data(th.Thread):
 	def load_index(self):
 		log.info("Loading index.")
 		w = W()
-		self.index, self.docs = makeindex.readindex("index.pickle")
+		self.index, self.docs, self.sorted_words = makeindex.readindex("index.pickle")
 		log.info("Index loaded %s" % w)
 		if MT_INDEX: self.update_logo_cb(busy=False, lock=True)
 		
@@ -73,7 +73,7 @@ class Data(th.Thread):
 	
 	def get_result(self, a_query, dirs_only):
 		w = W()
-		result = query.get_docs(a_query, self.index, self.docs, dirs_only)
+		result = query.get_docs(a_query, self.index, self.docs, self.sorted_words, dirs_only)
 		log.debug("Query: '%s', %s docs, %s" % (a_query, len(result), w))
 		return result
 	
