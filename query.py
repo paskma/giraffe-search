@@ -2,6 +2,9 @@
 import makeindex, inverter, lister
 from bisect import bisect_left
 
+import priklad
+import hello_ext
+
 def intersection(a, b):
 	return list(set(a).intersection(set(b)))
 
@@ -9,7 +12,80 @@ def difference(a,b):
 	return list(set(a).difference(set(b)))
 
 def union(a,b):
+	#a.sort()
+	#b.sort()
 	return list(set(a).union(set(b)))
+	#return priklad.uni(a,b)
+
+def raw_multion(lists):
+	result = []
+	for i in lists:
+		result = union(result, i)
+	return result
+
+def multiread(lists):
+	count = 0;
+	foo = 0;
+	for lst in lists:
+		for i in lst:
+			foo += i;
+			count += 1;
+	
+	print "pycount %s foo %s" % (count, foo)
+	return []
+
+def multiset(lists):
+	result = set();
+	
+	for lst in lists:
+		for i in lst:
+			result.add(i)
+	
+	return list(result)
+
+def multion(lists):
+	"""union of multiple sorted lists"""
+	if not lists:
+		raise ValueError
+
+	result = []
+	active = list(lists)
+	indices = [0] * len(active)
+	
+	while True:
+		new_active = []
+		new_indices = []
+		
+		for i, lst in enumerate(active):
+			if indices[i] < len(lst):
+				new_active.append(lst)
+				new_indices.append(indices[i])
+		
+		active = new_active
+		indices = new_indices
+
+		if not active:
+			return result
+		
+		mindoc = 2**64
+		increment = []
+		for i, lst in enumerate(active):
+			doc = lst[indices[i]]
+			if doc < mindoc:
+				increment = [i]
+				mindoc = doc
+			elif doc == mindoc:
+				increment.append(i)
+	
+		if len(result) == 0 or result[len(result)-1] != mindoc:
+			result.append(mindoc)
+		
+		for i in increment:
+			indices[i] += 1
+
+def test_multion():
+	assert multion([[1,5,6],[4,5,6,],[70],[3],[3],[]]) == [1, 3, 4, 5, 6, 70]
+	print "OK"
 
 def test_intersection():
 	a = [1,2,3,3,4,5]
@@ -48,9 +124,18 @@ def get_docs(query, index, docs, sorted_words, dirs_only=False):
 	for w in words:
 		next = []
 		if w in wild_words:
+			to_multion = []
 			for i in sorted_words:
 				if i.startswith(w):
-					next = union(next, index[i])
+					to_multion.append(index[i])
+					#next = union(next, index[i])
+			print "to union", len(to_multion)
+			#next = multion(to_multion)
+			#next = hello_ext.multion(to_multion)
+			#next = hello_ext.multiread(to_multion)
+			#next = multiread(to_multion);
+			#next = multiset(to_multion);
+			next = raw_multion(to_multion);
 		elif w in strict_words:
 			try: next = index[w]
 			except KeyError: next = []

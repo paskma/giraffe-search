@@ -24,9 +24,10 @@ def add(i, doc, dict):
 def invert(docs):
 	"inverts list of docs into index dictionary"
 	index = {}
-	for i in range(len(docs)):
+	for i in xrange(len(docs)):
 		add(i, docs[i], index)
 	
+	#sets to sorted lists
 	for k in index.keys():
 		foo = list(index[k])
 		foo.sort()
