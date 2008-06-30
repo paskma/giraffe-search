@@ -117,6 +117,7 @@ def get_docs(query, index, docs, sorted_words, dirs_only=False):
 	words += wild_words
 	words += strict_words
 	ids = []
+	query_info = []
 	
 	# all breeds of yes words
 	firstrun = True
@@ -136,16 +137,23 @@ def get_docs(query, index, docs, sorted_words, dirs_only=False):
 			#next = multiread(to_multion);
 			#next = multiset(to_multion);
 			next = raw_multion(to_multion);
+			query_info.append((w+'*', len(next)))
 		elif w in strict_words:
 			try: next = index[w]
 			except KeyError: next = []
+			query_info.append((w+'&', len(next)))
 		else: #non-strict yes-word
 			i = bisect_left(sorted_words, w)
 			if i < len(sorted_words) and sorted_words[i].startswith(w):
 				next = index[sorted_words[i]]
-				if sorted_words[i] != w: print "ENHACED", sorted_words[i]
+				if sorted_words[i] != w:
+					#print "ENHACED", sorted_words[i]
+					query_info.append((w+"~"+sorted_words[i][len(w):], len(next)))
+				else:
+					query_info.append((w, len(next)))
 			else:
 				next = []
+				query_info.append((w, 0))
 			
 		if firstrun:
 			firstrun = False
@@ -174,7 +182,7 @@ def get_docs(query, index, docs, sorted_words, dirs_only=False):
 			result.append(doc)
 	
 	result.sort()
-	return result
+	return result, query_info
 
 
 

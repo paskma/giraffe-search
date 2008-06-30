@@ -52,6 +52,9 @@ class Data(th.Thread):
 		if MT_INDEX: self.update_logo_cb(busy=False, lock=True)
 		
 	def run(self, *args, **kwargs):
+		"""
+			Infinite loop - waits for input, does a query, shows result
+		"""
 		assert MT
 		log.debug("Daemon started")
 		if MT_INDEX: self.load_index()
@@ -63,19 +66,19 @@ class Data(th.Thread):
 			self.queue = []
 			self.cond.release()
 			
-			result = self.get_result(*query)
+			result, query_info = self.get_result(*query)
 			
 			time.sleep(0.05)
 			if self.queue: continue
 			
-			self.view_result_cb(result)
+			self.view_result_cb(result, query_info)
 	
 	
 	def get_result(self, a_query, dirs_only):
 		w = W()
-		result = query.get_docs(a_query, self.index, self.docs, self.sorted_words, dirs_only)
+		result, query_info = query.get_docs(a_query, self.index, self.docs, self.sorted_words, dirs_only)
 		log.debug("Query: '%s', %s docs, %s" % (a_query, len(result), w))
-		return result
+		return result, query_info
 	
 	def set_result_cb(self, cb):
 		self.view_result_cb = cb
@@ -90,7 +93,7 @@ class Data(th.Thread):
 			self.cond.notify()
 			self.cond.release()
 		else:
-			self.view_result_cb(self.get_result(a_query, dirs_only))
+			self.view_result_cb(*self.get_result(a_query, dirs_only))
 
 class Mainform:
 	"""
@@ -112,7 +115,7 @@ class Mainform:
 		self.data.do_query(query, dirs_only)
 		log.debug("Lag '%s' %s " % (query, w))
 	
-	def view_result(self, docs):
+	def view_result(self, docs, query_info):
 		"""
 		   Called from Data class 
 		"""
@@ -136,6 +139,13 @@ class Mainform:
 			self.window.set_title("Giraffe: %s (%s items found)" % (self.query.get_text(), len(docs)))
 		else:
 			self.window.set_title("Giraffe")
+		
+		info_str = ""
+		for i in query_info:
+			info_str += "%s (%s) " % i
+		self.lbl_match.set_text(info_str)
+		
+		
 		self.update_logo(busy=False, lock=False)
 		if MT: gtk.gdk.threads_leave()
 		log.debug("View %s " % w)
@@ -220,6 +230,7 @@ class Mainform:
 		self.bottom_box.set_border_width(0)
 		self.bottom_box.set_spacing(5)
 		
+		# Query field
 		self.labelq = gtk.Label()
 		self.labelq.set_text("Search:")
 		self.query = gtk.Entry()
@@ -259,6 +270,8 @@ class Mainform:
 		self.limit_results = gtk.CheckButton("Limit results to %s" % self.RESULT_LIMIT)
 		self.limit_results.set_sensitive(False)
 		self.limit_results.set_active(True)
+		self.lbl_match = gtk.Label()
+		self.lbl_match.set_text("blekota")
 	
 		# signals
 		self.query.connect("changed", self.query_changed, None)
@@ -274,6 +287,7 @@ class Mainform:
 		self.mainbox.pack_start(self.sw_result)
 		self.bottom_box.pack_start(self.dirs_only, expand=False)
 		self.bottom_box.pack_start(self.limit_results, expand=False)
+		self.bottom_box.pack_end(self.lbl_match, expand=False)
 		self.mainbox.pack_start(self.bottom_box, expand=False)
 		self.window.add(self.mainbox)
 	
