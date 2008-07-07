@@ -78,6 +78,16 @@ def get_docs(query, index, docs, sorted_words, dirs_only=False):
 			query_info.append((w+'&', len(next)))
 		else: #non-strict yes-word
 			i = bisect_left(sorted_words, w)
+			
+			#find the most popular
+			SEARCH_AREA = 200
+			for j in xrange(i, i+SEARCH_AREA):
+				if j < len(sorted_words) and sorted_words[j].startswith(w):
+					if len(index[sorted_words[j]]) > len(index[sorted_words[i]]):
+						i = j #j is more popular than i
+				else:
+					break
+			
 			if i < len(sorted_words) and sorted_words[i].startswith(w):
 				next = index[sorted_words[i]]
 				if sorted_words[i] != w:
@@ -98,9 +108,11 @@ def get_docs(query, index, docs, sorted_words, dirs_only=False):
 	#not words
 	for w in not_words:
 		try:
-			ids = difference(ids, index[w])
+			next = index[w]
+			ids = difference(ids, next)
+			query_info.append(('-'+w, len(next)))
 		except KeyError:
-			pass
+			query_info.append(('-'+w, 0))
 		
 	
 	result = []
