@@ -79,22 +79,23 @@ def get_docs(query, index, docs, sorted_words, dirs_only=False):
 		else: #non-strict yes-word
 			i = bisect_left(sorted_words, w)
 			
-			#find the most popular
-			SEARCH_AREA = 200
-			for j in xrange(i, i+SEARCH_AREA):
-				if j < len(sorted_words) and sorted_words[j].startswith(w):
-					if len(index[sorted_words[j]]) > len(index[sorted_words[i]]):
-						i = j #j is more popular than i
-				else:
-					break
-			
-			if i < len(sorted_words) and sorted_words[i].startswith(w):
-				next = index[sorted_words[i]]
-				if sorted_words[i] != w:
+			if i < len(sorted_words) and sorted_words[i].startswith(w): #possible match
+				if sorted_words[i] != w: #not exact match
+					
+					#find the most popular
+					SEARCH_AREA = 200
+					for j in xrange(i, i+SEARCH_AREA):
+						if j < len(sorted_words) and sorted_words[j].startswith(w):
+							if len(index[sorted_words[j]]) > len(index[sorted_words[i]]):
+								i = j #j is more popular than i
+						else:
+							break
+				
 					#print "ENHACED", sorted_words[i]
 					query_info.append((w+"~"+sorted_words[i][len(w):], len(next)))
 				else:
 					query_info.append((w, len(next)))
+				next = index[sorted_words[i]]
 			else:
 				next = []
 				query_info.append((w, 0))
