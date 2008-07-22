@@ -92,10 +92,11 @@ def get_docs(query, index, docs, sorted_words, dirs_only=False):
 							break
 				
 					#print "ENHACED", sorted_words[i]
+					next = index[sorted_words[i]]
 					query_info.append((w+"~"+sorted_words[i][len(w):], len(next)))
-				else:
+				else: #exact matcho
+					next = index[sorted_words[i]]
 					query_info.append((w, len(next)))
-				next = index[sorted_words[i]]
 			else:
 				next = []
 				query_info.append((w, 0))
