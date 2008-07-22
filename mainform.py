@@ -216,19 +216,20 @@ class Mainform:
 			print ex
 	
 		# Sets the border width of the window.
-		self.window.set_border_width(5)
+		self.window.set_border_width(0)
 		self.window.set_title("Giraffe")
 		self.window.set_default_size(820, 300)
 		
 		self.mainbox = gtk.VBox()
+		self.mainbox.set_spacing(2)
 		
 		self.topbox = gtk.HBox()
 		self.topbox.set_border_width(8)
 		self.topbox.set_spacing(8)
 		
 		self.bottom_box = gtk.HBox()
-		self.bottom_box.set_border_width(0)
-		self.bottom_box.set_spacing(5)
+		self.bottom_box.set_border_width(2)
+		self.bottom_box.set_spacing(0)
 		
 		# Query field
 		self.labelq = gtk.Label()
@@ -271,7 +272,7 @@ class Mainform:
 		self.limit_results.set_sensitive(False)
 		self.limit_results.set_active(True)
 		self.lbl_match = gtk.Label()
-		self.lbl_match.set_text("blekota")
+		self.lbl_match.set_text("")
 	
 		# signals
 		self.query.connect("changed", self.query_changed, None)
@@ -281,13 +282,13 @@ class Mainform:
 		# Main form assembly
 		self.topbox.pack_start(self.labelq, expand=False)
 		self.topbox.pack_start(self.query)
+		self.topbox.pack_start(self.dirs_only, expand=False)
+		self.topbox.pack_start(self.limit_results, expand=False)
 		self.topbox.pack_start(self.logo, expand=False)
 		self.mainbox.pack_start(self.topbox, expand=False)
 		self.sw_result.add(self.result)
 		self.mainbox.pack_start(self.sw_result)
-		self.bottom_box.pack_start(self.dirs_only, expand=False)
-		self.bottom_box.pack_start(self.limit_results, expand=False)
-		self.bottom_box.pack_end(self.lbl_match, expand=False)
+		self.bottom_box.pack_start(self.lbl_match, expand=False)
 		self.mainbox.pack_start(self.bottom_box, expand=False)
 		self.window.add(self.mainbox)
 	
