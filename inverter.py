@@ -1,6 +1,6 @@
 import re
 
-splitter = re.compile(r"[/ \&\+,\-_\.=\[\]\(\)\\*]") #() []
+splitter = re.compile(r"[/ \&\+,\-_\.=\[\]\(\)\\*'\"]")
 
 def normalize(doc):
 	words = splitter.split(doc)
@@ -36,7 +36,7 @@ def invert(docs):
 	return index
 
 def test_splitter():
-	print splitter.split("ahoj/vole/blekota jekota&aa+bb,ccc-ddd__eee.fff=ggg[hhh](iii)jjj")
+	print splitter.split("ahoj/vole/blekota jekota&aa+bb,ccc-ddd__eee.fff=ggg[hhh](iii)jjj'kkk\"LLL")
 	print splitter.split("../tmp/rmitest/Bar.Java")
 
 if __name__ == "__main__":
